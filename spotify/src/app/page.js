@@ -8,7 +8,6 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    // Si ya está autenticado, redirigir al dashboard
     if (isAuthenticated()) {
       router.push('/dashboard');
     }
@@ -19,9 +18,13 @@ export default function Home() {
   };
 
   return (
-      <>
-        🎵 Spotify Taste Mixer
-      </>  
+    <div>
+      <h1>spaguetify</h1>
+      <p>Genera playlists segun tus gustos</p>
+      <a href="#" onClick={(e) => { e.preventDefault(); handleLogin(); }}>
+        Iniciar sesión con Spotify
+      </a>
+    </div>
   );
 }
 
