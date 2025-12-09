@@ -25,9 +25,18 @@ export default function DashboardPage() {
 		<div>
 			<h1>Dashboard</h1>
 			<p>Aqui ira el panel con widgets y playlist.</p>
-			<button type="button" onClick={() => { logout(); router.push('/'); }}>
-				Cerrar sesión
-			</button>
+			
+			<div>
+				<button type="button" onClick={() => router.push('/dashboard/estadisticas')}>
+					Estadísticas
+				</button>
+				<button type="button" onClick={() => router.back()}>
+					Atrás
+				</button>
+				<button type="button" onClick={() => { logout(); router.push('/'); }}>
+					Cerrar sesión
+				</button>
+			</div>
 		</div>
 	);
 }
