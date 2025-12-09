@@ -46,13 +46,6 @@ export default function EstadisticasPage() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      // Si hay error, mostrar mensaje
-      if (!resp.ok) {
-        setMensaje('Error al pedir datos. ¿Token expirado?');
-        setCargando(false);
-        return;
-      }
-
       // Convertir respuesta a JSON
       const data = await resp.json();
       const items = data.items;
@@ -88,9 +81,20 @@ export default function EstadisticasPage() {
 
       <h2>Artistas</h2>
       <ul>
-        {artistas.map((a) => (
-          <li key={a.id}>{a.name}</li>
-        ))}
+        {artistas.map((a) => {
+          // Obtener imagen del artista
+          let imagen = '';
+          if (a.images && a.images.length > 0) {
+            imagen = a.images[0].url;
+          }
+
+          return (
+            <li key={a.id}>
+              {imagen && <img src={imagen} alt={a.name} width="50" height="50" />}
+              {a.name}
+            </li>
+          );
+        })}
       </ul>
 
       <h2>Canciones</h2>
@@ -106,9 +110,16 @@ export default function EstadisticasPage() {
             nombresArtistas = nombres.join(', ');
           }
 
+          // Obtener imagen del album
+          let imagen = '';
+          if (cancion.album && cancion.album.images && cancion.album.images.length > 0) {
+            imagen = cancion.album.images[0].url;
+          }
+
           return (
             <li key={cancion.id}>
-              {cancion.name} - {nombresArtistas}
+              {imagen && <img src={imagen} alt={cancion.name} width="50" height="50" />}
+              <div>{cancion.name} - {nombresArtistas}</div>
             </li>
           );
         })}
