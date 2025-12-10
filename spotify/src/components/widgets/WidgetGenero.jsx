@@ -1,33 +1,43 @@
 'use client';
 
+import styles from './WidgetGenero.module.css';
+
 export default function WidgetGenero({ generos, seleccionados, onSelect }) {
+  
+  // Renderizar cada botón de género
+  function renderizarBoton(genero) {
+    // Ver si este género está seleccionado
+    const estaSeleccionado = seleccionados.includes(genero);
+    
+    // Elegir la clase CSS según si está seleccionado o no
+    let claseCSS = styles.boton;
+    if (estaSeleccionado) {
+      claseCSS = styles.botonActivo;
+    }
+    
+    // Texto del botón: con ✓ si está seleccionado
+    let texto = genero;
+    if (estaSeleccionado) {
+      texto = '✓ ' + genero;
+    }
+    
+    return (
+      <button
+        key={genero}
+        type="button"
+        onClick={() => onSelect(genero)}
+        className={claseCSS}
+      >
+        {texto}
+      </button>
+    );
+  }
+  
   return (
-    <div style={{ marginBottom: '20px' }}>
+    <div className={styles.contenedor}>
       <h2>Selecciona géneros</h2>
-      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-        {generos.map((genero) => {
-          const estaSel = seleccionados.includes(genero);
-          const color = estaSel ? '#1DB954' : '#ccc';
-          
-          return (
-            <button
-              key={genero}
-              type="button"
-              onClick={() => onSelect(genero)}
-              style={{
-                padding: '8px 12px',
-                backgroundColor: color,
-                color: estaSel ? '#fff' : '#000',
-                border: 'none',
-                borderRadius: '20px',
-                cursor: 'pointer',
-                fontWeight: estaSel ? 'bold' : 'normal'
-              }}
-            >
-              {estaSel ? '✓ ' : ''}{genero}
-            </button>
-          );
-        })}
+      <div className={styles.lista}>
+        {generos.map(renderizarBoton)}
       </div>
     </div>
   );

@@ -1,0 +1,48 @@
+.encabezado {
+  padding: 15px 20px;
+  background-color: #1DB954;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.contenido {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.titulo {
+  margin: 0;
+  font-size: 24px;
+}
+
+.subtitulo {
+  margin: 5px 0 0 0;
+  font-size: 14px;
+}
+
+.nav {
+  display: flex;
+  gap: 10px;
+}
+
+.boton {
+  padding: 8px 12px;
+  background-color: #fff;
+  color: #1DB954;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.botonRojo {
+  padding: 8px 12px;
+  background-color: #ff4444;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

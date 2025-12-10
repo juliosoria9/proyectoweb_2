@@ -1,0 +1,13 @@
+.contenedor {
+  margin-top: 20px;
+}
+
+.vacio {
+  margin-top: 20px;
+  color: #999;
+}
+
+.lista {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}

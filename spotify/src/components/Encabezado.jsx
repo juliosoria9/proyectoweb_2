@@ -2,89 +2,69 @@
 
 import { useRouter } from 'next/navigation';
 import { logout } from '@/lib/auth';
+import styles from './Encabezado.module.css';
 
 export default function Encabezado({ titulo, mostrarAtras, mostrarEstadisticas, mostrarDashboard }) {
   const router = useRouter();
 
+  // Ir a la página anterior
   function irAtras() {
     router.back();
   }
 
+  // Ir a estadísticas
   function irAEstadisticas() {
     router.push('/dashboard/estadisticas');
   }
 
+  // Ir al dashboard
   function irADashboard() {
     router.push('/dashboard');
   }
 
+  // Cerrar sesión y volver al inicio
   function cerrarSesion() {
     logout();
     router.push('/');
   }
 
   return (
-    <header style={{
-      padding: '15px 20px',
-      backgroundColor: '#1DB954',
-      color: '#fff',
-      marginBottom: '20px'
-    }}>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        maxWidth: '800px',
-        margin: '0 auto'
-      }}>
+    <header className={styles.encabezado}>
+      <div className={styles.contenido}>
+        
+        {/* Logo y título */}
         <div>
-          <h1 style={{ margin: 0, fontSize: '24px' }}> Spagetify</h1>
-          {titulo && <p style={{ margin: '5px 0 0 0', fontSize: '14px' }}>{titulo}</p>}
+          <h1 className={styles.titulo}>Spagetify</h1>
+          {titulo && <p className={styles.subtitulo}>{titulo}</p>}
         </div>
 
-        <nav style={{ display: 'flex', gap: '10px' }}>
+        {/* Botones de navegación */}
+        <nav className={styles.nav}>
+          
           {mostrarAtras && (
-            <button type="button" onClick={irAtras} style={estiloBoton}>
-               Atras
+            <button type="button" onClick={irAtras} className={styles.boton}>
+              Atras
             </button>
           )}
 
           {mostrarDashboard && (
-            <button type="button" onClick={irADashboard} style={estiloBoton}>
-               Dashboard
+            <button type="button" onClick={irADashboard} className={styles.boton}>
+              Dashboard
             </button>
           )}
 
           {mostrarEstadisticas && (
-            <button type="button" onClick={irAEstadisticas} style={estiloBoton}>
-               Estadisticas
+            <button type="button" onClick={irAEstadisticas} className={styles.boton}>
+              Estadisticas
             </button>
           )}
 
-          <button type="button" onClick={cerrarSesion} style={estiloBotonRojo}>
+          <button type="button" onClick={cerrarSesion} className={styles.botonRojo}>
             Cerrar sesión
           </button>
+          
         </nav>
       </div>
     </header>
   );
 }
-
-const estiloBoton = {
-  padding: '8px 12px',
-  backgroundColor: '#fff',
-  color: '#1DB954',
-  border: 'none',
-  borderRadius: '4px',
-  cursor: 'pointer',
-  fontWeight: 'bold'
-};
-
-const estiloBotonRojo = {
-  padding: '8px 12px',
-  backgroundColor: '#ff4444',
-  color: '#fff',
-  border: 'none',
-  borderRadius: '4px',
-  cursor: 'pointer'
-};

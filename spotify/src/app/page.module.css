@@ -1,0 +1,31 @@
+.contenedor {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #191414;
+}
+
+.titulo {
+  font-size: 48px;
+  color: #1DB954;
+  margin: 0;
+}
+
+.subtitulo {
+  color: #fff;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.botonLogin {
+  padding: 15px 30px;
+  background-color: #1DB954;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}

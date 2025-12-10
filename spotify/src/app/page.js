@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { isAuthenticated, getSpotifyAuthUrl } from '@/lib/auth';
+import styles from './page.module.css';
 
 export default function Home() {
   const router = useRouter();
@@ -20,32 +21,14 @@ export default function Home() {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#191414'
-    }}>
-      <h1 style={{ fontSize: '48px', color: '#1DB954', margin: 0 }}>🍝 Spagetify</h1>
-      <p style={{ color: '#fff', marginTop: '10px', marginBottom: '30px' }}>
-        Genera playlists según tus gustos
-      </p>
+    <div className={styles.contenedor}>
+      <h1 className={styles.titulo}>🍝 Spagetify</h1>
+      <p className={styles.subtitulo}>Genera playlists según tus gustos</p>
       
       <button 
         type="button"
         onClick={handleLogin}
-        style={{
-          padding: '15px 30px',
-          backgroundColor: '#1DB954',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '30px',
-          fontSize: '18px',
-          fontWeight: 'bold',
-          cursor: 'pointer'
-        }}
+        className={styles.botonLogin}
       >
         Iniciar sesión con Spotify
       </button>

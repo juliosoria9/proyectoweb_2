@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { isAuthenticated, getAccessToken } from '@/lib/auth';
 import Encabezado from '@/components/Encabezado';
+import styles from './page.module.css';
 
 export default function EstadisticasPage() {
   const router = useRouter();
@@ -31,7 +32,7 @@ export default function EstadisticasPage() {
       return;
     }
 
-    // Decidir URL según el tipo
+    // Decidir URL segun el tipo
     let url;
     if (tipo === 'artists') {
       url = 'https://api.spotify.com/v1/me/top/artists?limit=5';
@@ -60,20 +61,20 @@ export default function EstadisticasPage() {
   return (
     <div>
       <Encabezado 
-        titulo="Estadísticas" 
+        titulo="Estadisticas" 
         mostrarAtras={true}
         mostrarDashboard={true}
       />
 
-      <main style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
+      <main className={styles.main}>
         <p>Consulta tu top de Spotify.</p>
 
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+        <div className={styles.botones}>
           <button 
             type="button" 
             onClick={() => traerTop('artists')} 
             disabled={cargando}
-            style={estiloBoton}
+            className={styles.boton}
           >
             Top artistas
           </button>
@@ -81,17 +82,17 @@ export default function EstadisticasPage() {
             type="button" 
             onClick={() => traerTop('tracks')} 
             disabled={cargando}
-            style={estiloBoton}
+            className={styles.boton}
           >
             Top canciones
           </button>
         </div>
 
         {cargando && <p>Cargando...</p>}
-        {mensaje && <p style={{ color: 'red' }}>{mensaje}</p>}
+        {mensaje && <p className={styles.error}>{mensaje}</p>}
 
         <h2>Artistas</h2>
-        <ul style={{ listStyle: 'none', padding: 0 }}>
+        <ul className={styles.lista}>
           {artistas.map((a) => {
             let imagen = '';
             if (a.images && a.images.length > 0) {
@@ -99,16 +100,16 @@ export default function EstadisticasPage() {
             }
 
             return (
-              <li key={a.id} style={estiloItem}>
-                {imagen && <img src={imagen} alt={a.name} width="50" height="50" style={{ borderRadius: '4px' }} />}
-                <span style={{ marginLeft: '10px' }}>{a.name}</span>
+              <li key={a.id} className={styles.item}>
+                {imagen && <img src={imagen} alt={a.name} width="50" height="50" className={styles.imagen} />}
+                <span className={styles.texto}>{a.name}</span>
               </li>
             );
           })}
         </ul>
 
         <h2>Canciones</h2>
-        <ul style={{ listStyle: 'none', padding: 0 }}>
+        <ul className={styles.lista}>
           {canciones.map((cancion) => {
             // Obtener nombres de artistas
             let nombresArtistas = '';
@@ -127,11 +128,11 @@ export default function EstadisticasPage() {
             }
 
             return (
-              <li key={cancion.id} style={estiloItem}>
-                {imagen && <img src={imagen} alt={cancion.name} width="50" height="50" style={{ borderRadius: '4px' }} />}
-                <div style={{ marginLeft: '10px' }}>
+              <li key={cancion.id} className={styles.item}>
+                {imagen && <img src={imagen} alt={cancion.name} width="50" height="50" className={styles.imagen} />}
+                <div className={styles.texto}>
                   <strong>{cancion.name}</strong>
-                  <div style={{ fontSize: '0.9em', color: '#666' }}>{nombresArtistas}</div>
+                  <div className={styles.artista}>{nombresArtistas}</div>
                 </div>
               </li>
             );
@@ -141,21 +142,3 @@ export default function EstadisticasPage() {
     </div>
   );
 }
-
-// Estilos simples
-const estiloBoton = {
-  padding: '10px 20px',
-  backgroundColor: '#1DB954',
-  color: '#fff',
-  border: 'none',
-  borderRadius: '20px',
-  cursor: 'pointer',
-  fontWeight: 'bold'
-};
-
-const estiloItem = {
-  display: 'flex',
-  alignItems: 'center',
-  padding: '10px 0',
-  borderBottom: '1px solid #eee'
-};

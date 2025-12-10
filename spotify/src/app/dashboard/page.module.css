@@ -1,0 +1,30 @@
+.main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.botonGenerar {
+  padding: 10px 20px;
+  background-color: #1DB954;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.botonGenerar:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.mensaje {
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}

@@ -6,12 +6,13 @@ import { isAuthenticated, getAccessToken } from '@/lib/auth';
 import Encabezado from '@/components/Encabezado';
 import WidgetGenero from '@/components/widgets/WidgetGenero';
 import VisualizadorPlaylist from '@/components/VisualizadorPlaylist';
+import styles from './page.module.css';
 
 export default function DashboardPage() {
 	const router = useRouter();
 	const [ready, setReady] = useState(false);
 
-	// Lista de géneros disponibles
+	// Lista de generos disponibles
 	const generosDisponibles = ['rock', 'pop', 'jazz', 'hip-hop', 'electronic', 'indie', 'folk', 'metal'];
 
 	// Estado del generador
@@ -29,7 +30,7 @@ export default function DashboardPage() {
 		setReady(true);
 	}, [router]);
 
-	// Seleccionar o quitar un género
+	// Seleccionar o quitar un genero
 	function manejarSeleccionGenero(genero) {
 		const yaEsta = generosSeleccionados.includes(genero);
 		
@@ -62,7 +63,7 @@ export default function DashboardPage() {
 		}
 
 		try {
-			// TODO: Llamar a Spotify search por cada género
+			// TODO: Llamar a Spotify search por ca genero
 			const cancionesEjemplo = [
 				{ id: '1', name: 'Canción 1', artist: 'Artista 1', image: 'https://via.placeholder.com/50' },
 				{ id: '2', name: 'Canción 2', artist: 'Artista 2', image: 'https://via.placeholder.com/50' },
@@ -78,13 +79,12 @@ export default function DashboardPage() {
 		setCargando(false);
 	}
 
-	// Quitar una canción de la playlist
+	// Quitar una cancion de la playlist
 	function quitarCancion(id) {
 		const nuevas = playlist.filter(c => c.id !== id);
 		setPlaylist(nuevas);
 	}
 
-	// Mostrar cargando mientras verifica auth
 	if (!ready) {
 		return <div>Cargando...</div>;
 	}
@@ -97,7 +97,7 @@ export default function DashboardPage() {
 				mostrarEstadisticas={true}
 			/>
 
-			<main style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
+			<main className={styles.main}>
 				<p>Selecciona géneros y genera tu playlist personalizada.</p>
 
 				<WidgetGenero 
@@ -110,29 +110,13 @@ export default function DashboardPage() {
 					type="button" 
 					onClick={generarPlaylist} 
 					disabled={cargando}
-					style={{
-						padding: '10px 20px',
-						backgroundColor: '#1DB954',
-						color: '#fff',
-						border: 'none',
-						borderRadius: '20px',
-						cursor: cargando ? 'not-allowed' : 'pointer',
-						fontSize: '16px',
-						fontWeight: 'bold',
-						marginBottom: '20px'
-					}}
+					className={styles.botonGenerar}
 				>
 					{cargando ? 'Generando...' : 'Generar Playlist'}
 				</button>
 
 				{mensaje && (
-					<div style={{
-						padding: '10px',
-						marginBottom: '20px',
-						backgroundColor: '#f0f0f0',
-						border: '1px solid #ddd',
-						borderRadius: '4px'
-					}}>
+					<div className={styles.mensaje}>
 						{mensaje}
 					</div>
 				)}

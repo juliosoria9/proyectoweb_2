@@ -1,0 +1,33 @@
+.tarjeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.imagen {
+  border-radius: 4px;
+}
+
+.info {
+  flex: 1;
+}
+
+.nombre {
+  font-weight: bold;
+}
+
+.artista {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.botonQuitar {
+  padding: 6px 12px;
+  background-color: #ff4444;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

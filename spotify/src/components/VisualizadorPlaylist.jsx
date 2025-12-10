@@ -1,23 +1,37 @@
 'use client';
 
 import TarjetaCancion from '@/components/TarjetaCancion';
+import styles from './VisualizadorPlaylist.module.css';
 
 export default function VisualizadorPlaylist({ playlist, onQuitar }) {
+  
+  // Si no hay canciones, mostrar mensaje
   if (playlist.length === 0) {
     return (
-      <div style={{ marginTop: '20px', color: '#999' }}>
-        <p>No hay canciones en la playlist aún. Selecciona géneros y genera una.</p>
+      <div className={styles.vacio}>
+        <p>No hay canciones en la playlist aún.</p>
+        <p>Selecciona géneros y genera una.</p>
       </div>
     );
   }
-
+  
+  // Renderizar una canción
+  function renderizarCancion(cancion) {
+    return (
+      <TarjetaCancion 
+        key={cancion.id} 
+        cancion={cancion} 
+        onQuitar={onQuitar} 
+      />
+    );
+  }
+  
+  // Mostrar la playlist
   return (
-    <div style={{ marginTop: '20px' }}>
+    <div className={styles.contenedor}>
       <h2>Playlist generada ({playlist.length} canciones)</h2>
-      <div style={{ border: '1px solid #ddd', borderRadius: '4px' }}>
-        {playlist.map((cancion) => (
-          <TarjetaCancion key={cancion.id} cancion={cancion} onQuitar={onQuitar} />
-        ))}
+      <div className={styles.lista}>
+        {playlist.map(renderizarCancion)}
       </div>
     </div>
   );
