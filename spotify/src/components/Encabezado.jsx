@@ -4,25 +4,25 @@ import { useRouter } from 'next/navigation';
 import { logout } from '@/lib/auth';
 import styles from './Encabezado.module.css';
 
-export default function Encabezado({ titulo, mostrarAtras, mostrarEstadisticas, mostrarDashboard }) {
+export default function Encabezado({ titulo, mostrarAtras, mostrarEstadisticas, mostrarDashboard, mostrarFavoritos }) {
   const router = useRouter();
 
-  // Ir a la página anterior
   function irAtras() {
     router.back();
   }
 
-  // Ir a estadísticas
   function irAEstadisticas() {
     router.push('/dashboard/estadisticas');
   }
 
-  // Ir al dashboard
   function irADashboard() {
     router.push('/dashboard');
   }
 
-  // Cerrar sesión y volver al inicio
+  function irAFavoritos() {
+    router.push('/dashboard/favoritos');
+  }
+
   function cerrarSesion() {
     logout();
     router.push('/');
@@ -30,17 +30,13 @@ export default function Encabezado({ titulo, mostrarAtras, mostrarEstadisticas, 
 
   return (
     <header className={styles.encabezado}>
-      <div className={styles.contenido}>
-        
-        {/* Logo y título */}
+      <div className={styles['encabezado-contenido']}>
         <div>
-          <h1 className={styles.titulo}>Spagetify</h1>
-          {titulo && <p className={styles.subtitulo}>{titulo}</p>}
+          <h1 className={styles['encabezado-titulo']}>Spagetify</h1>
+          {titulo && <p className={styles['encabezado-subtitulo']}>{titulo}</p>}
         </div>
 
-        {/* Botones de navegación */}
-        <nav className={styles.nav}>
-          
+        <nav className={styles['encabezado-nav']}>
           {mostrarAtras && (
             <button type="button" onClick={irAtras} className={styles.boton}>
               Atras
@@ -59,10 +55,15 @@ export default function Encabezado({ titulo, mostrarAtras, mostrarEstadisticas, 
             </button>
           )}
 
-          <button type="button" onClick={cerrarSesion} className={styles.botonRojo}>
+          {mostrarFavoritos && (
+            <button type="button" onClick={irAFavoritos} className={styles.boton}>
+              Favoritos ⭐
+            </button>
+          )}
+
+          <button type="button" onClick={cerrarSesion} className={styles['boton-rojo']}>
             Cerrar sesión
           </button>
-          
         </nav>
       </div>
     </header>

@@ -216,6 +216,7 @@ export default function DashboardPage() {
 				titulo="Generador de Playlist" 
 				mostrarAtras={true}
 				mostrarEstadisticas={true}
+				mostrarFavoritos={true}
 			/>
 
 			<main className={styles.main}>
