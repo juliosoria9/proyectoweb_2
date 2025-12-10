@@ -13,13 +13,16 @@ import styles from './page.module.css';
 export default function DashboardPage() {
 	const router = useRouter();
 	const [ready, setReady] = useState(false);
-	const generosDisponibles = ['rock', 'pop', 'jazz', 'hip-hop', 'electronic', 'indie', 'folk', 'metal'];
+	const generosDisponibles = ['rock', 'pop', 'jazz', 'hip-hop', 'electronic', 'indie', 'folk', 'metal', 'reggaeton'];
 	const [generosSeleccionados, setGenerosSeleccionados] = useState([]);
 	const [decadaSeleccionada, setDecadaSeleccionada] = useState(null);
 	const [popularidadSeleccionada, setPopularidadSeleccionada] = useState(null);
 	const [playlist, setPlaylist] = useState([]);
 	const [cargando, setCargando] = useState(false);
 	const [mensaje, setMensaje] = useState('');
+	const [textoBusqueda, setTextoBusqueda] = useState('');
+	const [resultadosBusqueda, setResultadosBusqueda] = useState([]);
+	const [buscando, setBuscando] = useState(false);
 
 	useEffect(function() {
 		if (!isAuthenticated()) {
@@ -260,6 +263,91 @@ export default function DashboardPage() {
 		setPlaylist(nuevaPlaylist);
 	}
 
+	async function buscarCancionManual() {
+		if (textoBusqueda.trim() === '') {
+			return;
+		}
+
+		const token = getAccessToken();
+		if (!token) {
+			setMensaje('Sin token. Inicia sesión.');
+			return;
+		}
+
+		setBuscando(true);
+		setResultadosBusqueda([]);
+
+		try {
+			const url = 'https://api.spotify.com/v1/search?type=track&q=' + encodeURIComponent(textoBusqueda) + '&limit=5';
+			
+			const respuesta = await fetch(url, {
+				headers: { 'Authorization': 'Bearer ' + token }
+			});
+
+			const datos = await respuesta.json();
+
+			if (datos.tracks && datos.tracks.items) {
+				const resultados = [];
+				
+				for (let i = 0; i < datos.tracks.items.length; i++) {
+					const track = datos.tracks.items[i];
+					
+					let nombreArtista = 'Desconocido';
+					if (track.artists && track.artists.length > 0) {
+						nombreArtista = track.artists[0].name;
+					}
+					
+					let imagenAlbum = '';
+					if (track.album && track.album.images && track.album.images.length > 0) {
+						imagenAlbum = track.album.images[0].url;
+					}
+
+					resultados.push({
+						id: track.id,
+						name: track.name,
+						artist: nombreArtista,
+						image: imagenAlbum,
+						popularity: track.popularity
+					});
+				}
+				
+				setResultadosBusqueda(resultados);
+			}
+		} catch (error) {
+			setMensaje('Error al buscar: ' + error.message);
+		}
+
+		setBuscando(false);
+	}
+
+	function añadirCancionAPlaylist(cancion) {
+		const yaExiste = playlist.some(function(c) {
+			return c.id === cancion.id;
+		});
+
+		if (yaExiste) {
+			setMensaje('Esta canción ya está en la playlist.');
+			return;
+		}
+
+		const nuevaPlaylist = [];
+		for (let i = 0; i < playlist.length; i++) {
+			nuevaPlaylist.push(playlist[i]);
+		}
+		nuevaPlaylist.push(cancion);
+		
+		setPlaylist(nuevaPlaylist);
+		setMensaje('Añadida: ' + cancion.name);
+		setResultadosBusqueda([]);
+		setTextoBusqueda('');
+	}
+
+	function manejarTeclaBusqueda(evento) {
+		if (evento.key === 'Enter') {
+			buscarCancionManual();
+		}
+	}
+
 	if (!ready) {
 		return <div>Cargando...</div>;
 	}
@@ -342,6 +430,52 @@ export default function DashboardPage() {
 
 					<div className={styles.panelDerecho}>
 						<h2 className={styles.tituloPanel}>Tu Playlist</h2>
+						
+						<div className={styles.barraBusqueda}>
+							<input
+								type="text"
+								placeholder="Buscar canción en Spotify..."
+								value={textoBusqueda}
+								onChange={function(e) { setTextoBusqueda(e.target.value); }}
+								onKeyDown={manejarTeclaBusqueda}
+								className={styles.inputBusqueda}
+							/>
+							<button
+								type="button"
+								onClick={buscarCancionManual}
+								disabled={buscando}
+								className={styles.botonBuscar}
+							>
+								{buscando ? 'Buscando...' : '🔍'}
+							</button>
+						</div>
+
+						{resultadosBusqueda.length > 0 && (
+							<div className={styles.resultadosBusqueda}>
+								<p className={styles.tituloResultados}>Resultados:</p>
+								{resultadosBusqueda.map(function(cancion) {
+									return (
+										<div key={cancion.id} className={styles.resultadoItem}>
+											{cancion.image && (
+												<img src={cancion.image} alt={cancion.name} className={styles.resultadoImagen} />
+											)}
+											<div className={styles.resultadoInfo}>
+												<div className={styles.resultadoNombre}>{cancion.name}</div>
+												<div className={styles.resultadoArtista}>{cancion.artist}</div>
+											</div>
+											<button
+												type="button"
+												onClick={function() { añadirCancionAPlaylist(cancion); }}
+												className={styles.botonAñadir}
+											>
+												+ Añadir
+											</button>
+										</div>
+									);
+								})}
+							</div>
+						)}
+
 						<VisualizadorPlaylist playlist={playlist} onQuitar={quitarCancion} />
 					</div>
 				</div>

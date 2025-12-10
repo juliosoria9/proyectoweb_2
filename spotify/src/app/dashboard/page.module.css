@@ -140,3 +140,129 @@
     min-width: 140px;
   }
 }
+
+.barraBusqueda {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.inputBusqueda {
+  flex: 1;
+  padding: 14px 18px;
+  background-color: #282828;
+  border: 2px solid #404040;
+  border-radius: 25px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.inputBusqueda:focus {
+  border-color: #1DB954;
+  background-color: #333;
+}
+
+.inputBusqueda::placeholder {
+  color: #888;
+}
+
+.botonBuscar {
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #1DB954 0%, #1ed760 100%);
+  border: none;
+  border-radius: 25px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.botonBuscar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(29, 185, 84, 0.4);
+}
+
+.botonBuscar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.resultadosBusqueda {
+  background: linear-gradient(135deg, #282828 0%, #1a1a1a 100%);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tituloResultados {
+  color: #b3b3b3;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.resultadoItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  margin-bottom: 8px;
+}
+
+.resultadoItem:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.resultadoImagen {
+  width: 45px;
+  height: 45px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.resultadoInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.resultadoNombre {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resultadoArtista {
+  color: #b3b3b3;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.botonAñadir {
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 2px solid #1DB954;
+  border-radius: 20px;
+  color: #1DB954;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.botonAñadir:hover {
+  background-color: #1DB954;
+  color: #fff;
+}
