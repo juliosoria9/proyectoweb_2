@@ -1,31 +1,76 @@
 .main {
-  max-width: 900px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 30px 20px;
 }
 
+.layoutContainer {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.panelIzquierdo {
+  background: linear-gradient(135deg, #181818 0%, #121212 100%);
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 20px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+.panelDerecho {
+  background: linear-gradient(135deg, #181818 0%, #121212 100%);
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-height: 400px;
+}
+
+.tituloPanel {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #1DB954 0%, #1ed760 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.descripcion {
+  color: #b3b3b3;
+  font-size: 14px;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
 .botonesAccion {
   display: flex;
+  flex-direction: column;
   gap: 12px;
-  flex-wrap: wrap;
-  margin: 20px 0;
+  margin: 24px 0 0 0;
 }
 
 .botonGenerar {
-  padding: 14px 32px;
-  background-color: #1DB954;
+  width: 100%;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, #1DB954 0%, #1ed760 100%);
   color: #fff;
   border: none;
   border-radius: 30px;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
 }
 
 .botonGenerar:hover {
-  background-color: #1ed760;
-  transform: scale(1.03);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(29, 185, 84, 0.5);
 }
 
 .botonGenerar:disabled {
@@ -35,20 +80,22 @@
 }
 
 .botonSecundario {
-  padding: 12px 24px;
+  width: 100%;
+  padding: 14px 24px;
   background-color: transparent;
   color: #fff;
-  border: 1px solid #fff;
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 30px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
 }
 
 .botonSecundario:hover {
   background-color: rgba(255, 255, 255, 0.1);
-  transform: scale(1.03);
+  border-color: #1DB954;
+  transform: translateY(-2px);
 }
 
 .botonSecundario:disabled {
@@ -58,10 +105,38 @@
 }
 
 .mensaje {
-  padding: 12px 16px;
-  margin-bottom: 20px;
-  background-color: #282828;
+  padding: 14px 18px;
+  margin-top: 16px;
+  background: linear-gradient(135deg, #282828 0%, #1a1a1a 100%);
   border-left: 4px solid #1DB954;
-  border-radius: 4px;
+  border-radius: 8px;
   color: #b3b3b3;
+  font-size: 14px;
+  line-height: 1.5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 1024px) {
+  .layoutContainer {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .panelIzquierdo {
+    position: relative;
+    top: 0;
+    max-height: none;
+  }
+  
+  .botonesAccion {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .botonGenerar,
+  .botonSecundario {
+    width: auto;
+    flex: 1;
+    min-width: 140px;
+  }
 }

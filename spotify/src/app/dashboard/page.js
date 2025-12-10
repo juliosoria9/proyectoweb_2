@@ -238,75 +238,6 @@ export default function DashboardPage() {
 		setPlaylist(nuevaPlaylist);
 	}
 
-	async function guardarEnSpotify() {
-		if (playlist.length === 0) {
-			setMensaje('No hay canciones para guardar.');
-			return;
-		}
-
-		setCargando(true);
-		setMensaje('');
-
-		const token = getAccessToken();
-		if (!token) {
-			setMensaje('Sin token. Inicia sesión.');
-			setCargando(false);
-			return;
-		}
-
-		try {
-			// 1. Obtener ID del usuario
-			const userResp = await fetch('https://api.spotify.com/v1/me', {
-				headers: { 'Authorization': 'Bearer ' + token }
-			});
-			const userData = await userResp.json();
-			const userId = userData.id;
-
-			// 2. Crear nombre para la playlist
-			const fecha = new Date();
-			const nombrePlaylist = 'Spagetify - ' + fecha.toLocaleDateString();
-
-			// 3. Crear playlist
-			const createResp = await fetch('https://api.spotify.com/v1/users/' + userId + '/playlists', {
-				method: 'POST',
-				headers: {
-					'Authorization': 'Bearer ' + token,
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					name: nombrePlaylist,
-					description: 'Playlist generada con Spagetify',
-					public: false
-				})
-			});
-			const playlistData = await createResp.json();
-			const playlistId = playlistData.id;
-
-			// 4. Añadir canciones (máximo 100 por petición)
-			const uris = [];
-			for (let i = 0; i < playlist.length; i++) {
-				uris.push('spotify:track:' + playlist[i].id);
-			}
-
-			await fetch('https://api.spotify.com/v1/playlists/' + playlistId + '/tracks', {
-				method: 'POST',
-				headers: {
-					'Authorization': 'Bearer ' + token,
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					uris: uris
-				})
-			});
-
-			setMensaje('✅ Playlist guardada en tu Spotify: "' + nombrePlaylist + '"');
-		} catch (error) {
-			setMensaje('❌ Error al guardar: ' + error.message);
-		}
-
-		setCargando(false);
-	}
-
 	if (!ready) {
 		return <div>Cargando...</div>;
 	}
@@ -326,64 +257,72 @@ export default function DashboardPage() {
 			/>
 
 			<main className={styles.main}>
-				<p>Selecciona géneros y genera tu playlist personalizada.</p>
+				<div className={styles.layoutContainer}>
+					<div className={styles.panelIzquierdo}>
+						<h2 className={styles.tituloPanel}>Opciones de Playlist</h2>
+						<p className={styles.descripcion}>Selecciona géneros y personaliza tu playlist.</p>
 
-				<WidgetGenero 
-					generos={generosDisponibles}
-					seleccionados={generosSeleccionados}
-					onSelect={manejarSeleccionGenero}
-				/>
+						<WidgetGenero 
+							generos={generosDisponibles}
+							seleccionados={generosSeleccionados}
+							onSelect={manejarSeleccionGenero}
+						/>
 
-				<WidgetDecada 
-					decadaSeleccionada={decadaSeleccionada}
-					onSelect={setDecadaSeleccionada}
-				/>
+						<WidgetDecada 
+							decadaSeleccionada={decadaSeleccionada}
+							onSelect={setDecadaSeleccionada}
+						/>
 
-				<WidgetPopularidad
-					popularidadSeleccionada={popularidadSeleccionada}
-					onSelect={setPopularidadSeleccionada}
-				/>
+						<WidgetPopularidad
+							popularidadSeleccionada={popularidadSeleccionada}
+							onSelect={setPopularidadSeleccionada}
+						/>
 
-				<div className={styles.botonesAccion}>
-					<button 
-						type="button" 
-						onClick={generarPlaylist} 
-						disabled={cargando}
-						className={styles.botonGenerar}
-					>
-						{textoBoton}
-					</button>
+						<div className={styles.botonesAccion}>
+							<button 
+								type="button" 
+								onClick={generarPlaylist} 
+								disabled={cargando}
+								className={styles.botonGenerar}
+							>
+								{textoBoton}
+							</button>
 
-					{playlist.length > 0 && (
-						<button 
-							type="button" 
-							onClick={refrescarPlaylist} 
-							disabled={cargando}
-							className={styles.botonSecundario}
-						>
-							Refrescar
-						</button>
-					)}
+							{playlist.length > 0 && (
+								<button 
+									type="button" 
+									onClick={refrescarPlaylist} 
+									disabled={cargando}
+									className={styles.botonSecundario}
+								>
+									Refrescar
+								</button>
+							)}
 
-					{playlist.length > 0 && (
-						<button 
-							type="button" 
-							onClick={añadirMasCanciones} 
-							disabled={cargando}
-							className={styles.botonSecundario}
-						>
-							Añadir más
-						</button>
-					)}
-				</div>
+							{playlist.length > 0 && (
+								<button 
+									type="button" 
+									onClick={añadirMasCanciones} 
+									disabled={cargando}
+									className={styles.botonSecundario}
+								>
+									Añadir más
+								</button>
+							)}
+						</div>
 
-				{mensaje && (
-					<div className={styles.mensaje}>
-						{mensaje}
+						{mensaje && (
+							<div className={styles.mensaje}>
+								{mensaje}
+							</div>
+						)}
 					</div>
-				)}
 
-				<VisualizadorPlaylist playlist={playlist} onQuitar={quitarCancion} />
+					<div className={styles.panelDerecho}>
+						<h2 className={styles.tituloPanel}>Tu Playlist</h2>
+						<VisualizadorPlaylist playlist={playlist} onQuitar={quitarCancion} />
+					</div>
+				</div>
 			</main>
 		</div>
 	);
