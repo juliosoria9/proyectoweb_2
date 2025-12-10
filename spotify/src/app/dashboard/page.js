@@ -238,6 +238,75 @@ export default function DashboardPage() {
 		setPlaylist(nuevaPlaylist);
 	}
 
+	async function guardarEnSpotify() {
+		if (playlist.length === 0) {
+			setMensaje('No hay canciones para guardar.');
+			return;
+		}
+
+		setCargando(true);
+		setMensaje('');
+
+		const token = getAccessToken();
+		if (!token) {
+			setMensaje('Sin token. Inicia sesión.');
+			setCargando(false);
+			return;
+		}
+
+		try {
+			// 1. Obtener ID del usuario
+			const userResp = await fetch('https://api.spotify.com/v1/me', {
+				headers: { 'Authorization': 'Bearer ' + token }
+			});
+			const userData = await userResp.json();
+			const userId = userData.id;
+
+			// 2. Crear nombre para la playlist
+			const fecha = new Date();
+			const nombrePlaylist = 'Spagetify - ' + fecha.toLocaleDateString();
+
+			// 3. Crear playlist
+			const createResp = await fetch('https://api.spotify.com/v1/users/' + userId + '/playlists', {
+				method: 'POST',
+				headers: {
+					'Authorization': 'Bearer ' + token,
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					name: nombrePlaylist,
+					description: 'Playlist generada con Spagetify',
+					public: false
+				})
+			});
+			const playlistData = await createResp.json();
+			const playlistId = playlistData.id;
+
+			// 4. Añadir canciones (máximo 100 por petición)
+			const uris = [];
+			for (let i = 0; i < playlist.length; i++) {
+				uris.push('spotify:track:' + playlist[i].id);
+			}
+
+			await fetch('https://api.spotify.com/v1/playlists/' + playlistId + '/tracks', {
+				method: 'POST',
+				headers: {
+					'Authorization': 'Bearer ' + token,
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					uris: uris
+				})
+			});
+
+			setMensaje('✅ Playlist guardada en tu Spotify: "' + nombrePlaylist + '"');
+		} catch (error) {
+			setMensaje('❌ Error al guardar: ' + error.message);
+		}
+
+		setCargando(false);
+	}
+
 	if (!ready) {
 		return <div>Cargando...</div>;
 	}

@@ -66,7 +66,7 @@ export default function EstadisticasPage() {
     traerTop('tracks');
   }
 
-  function renderizarArtista(artista) {
+  function renderizarArtista(artista, posicion) {
     let imagen = '';
     if (artista.images && artista.images.length > 0) {
       imagen = artista.images[0].url;
@@ -74,13 +74,14 @@ export default function EstadisticasPage() {
 
     return (
       <li key={artista.id} className={styles.item}>
-        {imagen && <img src={imagen} alt={artista.name} width="50" height="50" className={styles.imagen} />}
+        <div className={styles.ranking}>#{posicion + 1}</div>
+        {imagen && <img src={imagen} alt={artista.name} width="64" height="64" className={styles.imagen} />}
         <span className={styles.texto}>{artista.name}</span>
       </li>
     );
   }
 
-  function renderizarCancion(cancion) {
+  function renderizarCancion(cancion, posicion) {
     let imagen = '';
     if (cancion.album && cancion.album.images && cancion.album.images.length > 0) {
       imagen = cancion.album.images[0].url;
@@ -97,7 +98,8 @@ export default function EstadisticasPage() {
 
     return (
       <li key={cancion.id} className={styles.item}>
-        {imagen && <img src={imagen} alt={cancion.name} width="50" height="50" className={styles.imagen} />}
+        <div className={styles.ranking}>#{posicion + 1}</div>
+        {imagen && <img src={imagen} alt={cancion.name} width="64" height="64" className={styles.imagen} />}
         <div className={styles.texto}>
           <strong>{cancion.name}</strong>
           <div className={styles.artista}>{nombresArtistas}</div>
@@ -122,18 +124,32 @@ export default function EstadisticasPage() {
           </button>
         </div>
 
-        {cargando && <p>Cargando...</p>}
+        {cargando && (
+          <div className={styles.spinnerContainer}>
+            <div className={styles.spinner}></div>
+            <p className={styles.cargandoTexto}>Cargando tus estadísticas...</p>
+          </div>
+        )}
+        
         {mensaje && <p className={styles.error}>{mensaje}</p>}
 
-        <h2>Artistas</h2>
-        <ul className={styles.lista}>
-          {artistas.map(renderizarArtista)}
-        </ul>
+        {artistas.length > 0 && (
+          <div className={styles.seccion}>
+            <h2 className={styles.titulo}>🎤 Top Artistas</h2>
+            <ul className={styles.lista}>
+              {artistas.map(renderizarArtista)}
+            </ul>
+          </div>
+        )}
 
-        <h2>Canciones</h2>
-        <ul className={styles.lista}>
-          {canciones.map(renderizarCancion)}
-        </ul>
+        {canciones.length > 0 && (
+          <div className={styles.seccion}>
+            <h2 className={styles.titulo}>🎵 Top Canciones</h2>
+            <ul className={styles.lista}>
+              {canciones.map(renderizarCancion)}
+            </ul>
+          </div>
+        )}
       </main>
     </div>
   );
