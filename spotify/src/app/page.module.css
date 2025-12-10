@@ -4,23 +4,27 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #191414;
+  background: linear-gradient(180deg, #1DB954 0%, #121212 50%);
 }
 
 .titulo {
-  font-size: 48px;
-  color: #1DB954;
+  font-size: 56px;
+  color: #fff;
   margin: 0;
+  font-weight: bold;
+  letter-spacing: -1px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .subtitulo {
-  color: #fff;
-  margin-top: 10px;
-  margin-bottom: 30px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 15px;
+  margin-bottom: 40px;
+  font-size: 18px;
 }
 
 .botonLogin {
-  padding: 15px 30px;
+  padding: 16px 40px;
   background-color: #1DB954;
   color: #fff;
   border: none;
@@ -28,4 +32,12 @@
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 8px 24px rgba(29, 185, 84, 0.3);
+}
+
+.botonLogin:hover {
+  background-color: #1ed760;
+  transform: scale(1.05);
+  box-shadow: 0 12px 32px rgba(29, 185, 84, 0.4);
 }

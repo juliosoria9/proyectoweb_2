@@ -1,54 +1,91 @@
 .main {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 30px 20px;
 }
 
 .botones {
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .boton {
-  padding: 10px 20px;
+  padding: 12px 24px;
+  background-color: #282828;
+  color: #b3b3b3;
+  border: 1px solid #404040;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.boton:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+.botonActivo {
+  padding: 12px 24px;
   background-color: #1DB954;
   color: #fff;
   border: none;
   border-radius: 20px;
   cursor: pointer;
   font-weight: bold;
+  font-size: 14px;
 }
 
 .boton:disabled {
   cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .error {
-  color: red;
+  color: #ff6b6b;
+  background-color: #282828;
+  padding: 12px;
+  border-radius: 8px;
 }
 
 .lista {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .item {
   display: flex;
   align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
+  padding: 14px;
+  background-color: #181818;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: background-color 0.2s;
+}
+
+.item:hover {
+  background-color: #282828;
 }
 
 .imagen {
   border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .texto {
-  margin-left: 10px;
+  margin-left: 15px;
+}
+
+.texto strong {
+  color: #fff;
+  font-size: 15px;
 }
 
 .artista {
-  font-size: 0.9em;
-  color: #666;
+  font-size: 13px;
+  color: #b3b3b3;
+  margin-top: 2px;
 }

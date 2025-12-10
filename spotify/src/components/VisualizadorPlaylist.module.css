@@ -1,13 +1,21 @@
 .contenedor {
-  margin-top: 20px;
+  margin-top: 25px;
+}
+
+.contenedor h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #fff;
 }
 
 .vacio {
   margin-top: 20px;
-  color: #999;
+  color: #888;
+  font-style: italic;
 }
 
 .lista {
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  background-color: #121212;
+  border-radius: 8px;
+  padding: 8px;
 }

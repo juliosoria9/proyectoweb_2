@@ -1,48 +1,65 @@
 .encabezado {
-  padding: 15px 20px;
-  background-color: #1DB954;
-  color: #fff;
-  margin-bottom: 20px;
+  padding: 20px;
+  background: linear-gradient(180deg, #1DB954 0%, #121212 100%);
+  margin-bottom: 0;
 }
 
 .contenido {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
 .titulo {
   margin: 0;
-  font-size: 24px;
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: -0.5px;
 }
 
 .subtitulo {
   margin: 5px 0 0 0;
   font-size: 14px;
+  opacity: 0.9;
 }
 
 .nav {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .boton {
-  padding: 8px 12px;
-  background-color: #fff;
-  color: #1DB954;
-  border: none;
-  border-radius: 4px;
+  padding: 10px 16px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.boton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.02);
 }
 
 .botonRojo {
-  padding: 8px 12px;
-  background-color: #ff4444;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
+  padding: 10px 16px;
+  background-color: transparent;
+  color: #ff6b6b;
+  border: 1px solid #ff6b6b;
+  border-radius: 20px;
   cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.botonRojo:hover {
+  background-color: #ff6b6b;
+  color: #fff;
 }
