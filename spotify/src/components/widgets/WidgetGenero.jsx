@@ -5,16 +5,16 @@ import styles from './WidgetGenero.module.css';
 export default function WidgetGenero({ generos, seleccionados, onSelect }) {
   
   function renderizarBoton(genero) {
-    var estaSeleccionado = seleccionados.includes(genero);
+    const estaSeleccionado = seleccionados.includes(genero);
     
-    var claseCSS = styles.boton;
+    let claseCSS = styles.boton;
     if (estaSeleccionado) {
       claseCSS = styles.botonActivo;
     }
     
-    var texto = genero;
+    let textoBoton = genero;
     if (estaSeleccionado) {
-      texto = '✓ ' + genero;
+      textoBoton = '✓ ' + genero;
     }
     
     function handleClick() {
@@ -28,7 +28,7 @@ export default function WidgetGenero({ generos, seleccionados, onSelect }) {
         onClick={handleClick}
         className={claseCSS}
       >
-        {texto}
+        {textoBoton}
       </button>
     );
   }
@@ -36,6 +36,7 @@ export default function WidgetGenero({ generos, seleccionados, onSelect }) {
   return (
     <div className={styles.contenedor}>
       <h2>Selecciona géneros</h2>
+      
       <div className={styles.lista}>
         {generos.map(renderizarBoton)}
       </div>

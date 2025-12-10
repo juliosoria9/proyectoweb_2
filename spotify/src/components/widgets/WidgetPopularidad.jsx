@@ -3,16 +3,16 @@
 import styles from './WidgetPopularidad.module.css';
 
 export default function WidgetPopularidad({ popularidadSeleccionada, onSelect }) {
-  var categorias = [
+  const CATEGORIAS_POPULARIDAD = [
     { id: 'mainstream', nombre: 'Mainstream' },
     { id: 'popular', nombre: 'Popular' },
     { id: 'underground', nombre: 'Underground' }
   ];
 
   function renderizarBoton(categoria) {
-    var estaSeleccionada = (popularidadSeleccionada === categoria.id);
+    const estaSeleccionada = (popularidadSeleccionada === categoria.id);
 
-    var claseCSS = styles.boton;
+    let claseCSS = styles.boton;
     if (estaSeleccionada) {
       claseCSS = styles.botonActivo;
     }
@@ -41,8 +41,9 @@ export default function WidgetPopularidad({ popularidadSeleccionada, onSelect })
     <div className={styles.contenedor}>
       <h2>Popularidad</h2>
       <p className={styles.descripcion}>¿Hits famosos o joyas ocultas?</p>
+      
       <div className={styles.lista}>
-        {categorias.map(renderizarBoton)}
+        {CATEGORIAS_POPULARIDAD.map(renderizarBoton)}
         
         <button
           type="button"

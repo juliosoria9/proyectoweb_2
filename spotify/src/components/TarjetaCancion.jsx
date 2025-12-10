@@ -3,55 +3,60 @@
 import { useState, useEffect } from 'react';
 import styles from './TarjetaCancion.module.css';
 
+const STORAGE_KEY = 'favorite_tracks';
+
 export default function TarjetaCancion({ cancion, onQuitar }) {
-  var [esFavorito, setEsFavorito] = useState(false);
+  const [esFavorito, setEsFavorito] = useState(false);
 
   useEffect(function() {
-    var guardados = localStorage.getItem('favorite_tracks');
-    if (guardados) {
-      var lista = JSON.parse(guardados);
-      var esta = lista.includes(cancion.id);
-      setEsFavorito(esta);
+    const cancionesFavoritas = localStorage.getItem(STORAGE_KEY);
+    
+    if (cancionesFavoritas) {
+      const listaFavoritos = JSON.parse(cancionesFavoritas);
+      const estaEnFavoritos = listaFavoritos.includes(cancion.id);
+      setEsFavorito(estaEnFavoritos);
     }
   }, [cancion.id]);
 
   function toggleFavorito() {
-    var guardados = localStorage.getItem('favorite_tracks');
-    var lista = [];
+    const cancionesFavoritas = localStorage.getItem(STORAGE_KEY);
+    let listaFavoritos = [];
     
-    if (guardados) {
-      lista = JSON.parse(guardados);
+    if (cancionesFavoritas) {
+      listaFavoritos = JSON.parse(cancionesFavoritas);
     }
 
     if (esFavorito) {
-      var nuevaLista = [];
-      for (var i = 0; i < lista.length; i++) {
-        if (lista[i] !== cancion.id) {
-          nuevaLista.push(lista[i]);
+      const nuevaLista = [];
+      for (let i = 0; i < listaFavoritos.length; i++) {
+        if (listaFavoritos[i] !== cancion.id) {
+          nuevaLista.push(listaFavoritos[i]);
         }
       }
-      lista = nuevaLista;
+      listaFavoritos = nuevaLista;
       setEsFavorito(false);
     } else {
-      lista.push(cancion.id);
+      listaFavoritos.push(cancion.id);
       setEsFavorito(true);
     }
 
-    localStorage.setItem('favorite_tracks', JSON.stringify(lista));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(listaFavoritos));
   }
   
   function handleQuitar() {
     onQuitar(cancion.id);
   }
 
-  var iconoEstrella = '☆';
-  if (esFavorito) {
-    iconoEstrella = '⭐';
-  }
+  const iconoEstrella = esFavorito ? '⭐' : '☆';
   
   return (
     <div className={styles.tarjeta}>
-      <button type="button" onClick={toggleFavorito} className={styles.botonFavorito}>
+      <button 
+        type="button" 
+        onClick={toggleFavorito} 
+        className={styles.botonFavorito}
+        title={esFavorito ? 'Quitar de favoritos' : 'Añadir a favoritos'}
+      >
         {iconoEstrella}
       </button>
       
@@ -70,7 +75,12 @@ export default function TarjetaCancion({ cancion, onQuitar }) {
         <div className={styles.artista}>{cancion.artist}</div>
       </div>
       
-      <button type="button" onClick={handleQuitar} className={styles.botonQuitar}>
+      <button 
+        type="button" 
+        onClick={handleQuitar} 
+        className={styles.botonQuitar}
+        title="Quitar de la playlist"
+      >
         Quitar
       </button>
     </div>

@@ -27,6 +27,7 @@ export default function VisualizadorPlaylist({ playlist, onQuitar }) {
   return (
     <div className={styles.contenedor}>
       <h2>Playlist generada ({playlist.length} canciones)</h2>
+      
       <div className={styles.lista}>
         {playlist.map(renderizarCancion)}
       </div>
