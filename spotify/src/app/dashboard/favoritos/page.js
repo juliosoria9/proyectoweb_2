@@ -117,28 +117,33 @@ export default function FavoritosPage() {
 		
 		return (
 			<div key={cancion.id} className={styles.tarjeta}>
-				{cancion.image && (
-					<img 
-						src={cancion.image} 
-						alt={cancion.name}
-						width="60"
-						height="60"
-						className={styles.imagen}
-					/>
-				)}
+				<div className={styles.imagenContainer}>
+					{cancion.image && (
+						<img 
+							src={cancion.image} 
+							alt={cancion.name}
+							width="64"
+							height="64"
+							className={styles.imagen}
+						/>
+					)}
+				</div>
 
 				<div className={styles.info}>
 					<div className={styles.nombre}>{cancion.name}</div>
 					<div className={styles.artista}>{cancion.artist}</div>
 				</div>
 
-				<button 
-					type="button"
-					onClick={handleQuitar}
-					className={styles.botonQuitar}
-				>
-					Quitar ⭐
-				</button>
+				<div className={styles.acciones}>
+					<span className={styles.iconoFavorito}>⭐</span>
+					<button 
+						type="button"
+						onClick={handleQuitar}
+						className={styles.botonQuitar}
+					>
+						Quitar
+					</button>
+				</div>
 			</div>
 		);
 	}
@@ -156,15 +161,32 @@ export default function FavoritosPage() {
 			/>
 
 			<main className={styles.main}>
-				{cargando && <p>Cargando favoritos...</p>}
+				{cargando && (
+					<div className={styles.cargandoContenedor}>
+						<div className={styles.spinner}></div>
+						<p className={styles.cargandoTexto}>Cargando tus canciones favoritas...</p>
+					</div>
+				)}
 
 				{!cargando && favoritos.length === 0 && (
-					<p>No tienes canciones favoritas. Añade algunas con la estrella ⭐</p>
+					<div className={styles.vacio}>
+						<div className={styles.iconoVacio}>⭐</div>
+						<h2>Sin favoritos aún</h2>
+						<p>Comienza a marcar tus canciones favoritas desde el generador de playlists.</p>
+						<p className={styles.ayuda}>Busca el ícono de estrella (☆) en cada canción</p>
+					</div>
 				)}
 
 				{!cargando && favoritos.length > 0 && (
-					<div className={styles.lista}>
-						{favoritos.map(renderizarCancion)}
+					<div>
+						<div className={styles.header}>
+							<h2 className={styles.titulo}>
+								{favoritos.length} {favoritos.length === 1 ? 'Canción' : 'Canciones'}
+							</h2>
+						</div>
+						<div className={styles.lista}>
+							{favoritos.map(renderizarCancion)}
+						</div>
 					</div>
 				)}
 
