@@ -98,8 +98,8 @@ export default function DashboardPage() {
 				busqueda = busqueda + ' year:' + añoInicio + '-' + añoFin;
 			}
 
-			const offset = Math.floor(Math.random() * 50);
-			const url = 'https://api.spotify.com/v1/search?type=track&q=' + encodeURIComponent(busqueda) + '&limit=10&offset=' + offset;
+			const offset = Math.floor(Math.random() * 20);
+			const url = 'https://api.spotify.com/v1/search?type=track&q=' + encodeURIComponent(busqueda) + '&limit=15&offset=' + offset;
 			
 			const respuesta = await fetch(url, {
 				headers: { 'Authorization': 'Bearer ' + token }
@@ -146,6 +146,7 @@ export default function DashboardPage() {
 
 		if (popularidadSeleccionada !== null) {
 			const rango = obtenerRangoPopularidad(popularidadSeleccionada);
+			const cancionesAntesDeFiltro = canciones.length;
 			
 			if (rango !== null) {
 				const cancionesFiltradas = [];
@@ -160,6 +161,10 @@ export default function DashboardPage() {
 				}
 				
 				canciones = cancionesFiltradas;
+				
+				if (canciones.length === 0 && cancionesAntesDeFiltro > 0) {
+					console.log('Filtro de popularidad eliminó todas las canciones. Antes: ' + cancionesAntesDeFiltro);
+				}
 			}
 		}
 
@@ -180,8 +185,25 @@ export default function DashboardPage() {
 			const sinDuplicados = quitarDuplicados(nuevasCanciones);
 			const finales = sinDuplicados.slice(0, 30);
 			
-			setPlaylist(finales);
-			setMensaje('Playlist generada: ' + finales.length + ' canciones.');
+			if (finales.length === 0) {
+				let sugerencia = 'No se encontraron canciones. ';
+				
+				if (popularidadSeleccionada !== null && decadaSeleccionada !== null) {
+					sugerencia = sugerencia + 'Intenta sin filtro de popularidad o década.';
+				} else if (popularidadSeleccionada !== null) {
+					sugerencia = sugerencia + 'Intenta con otro nivel de popularidad.';
+				} else if (decadaSeleccionada !== null) {
+					sugerencia = sugerencia + 'Intenta con otra década o sin filtro de década.';
+				} else {
+					sugerencia = sugerencia + 'Intenta con otros géneros.';
+				}
+				
+				setMensaje(sugerencia);
+				setPlaylist([]);
+			} else {
+				setPlaylist(finales);
+				setMensaje('Playlist generada: ' + finales.length + ' canciones.');
+			}
 		} catch (error) {
 			setMensaje('Error: ' + error.message);
 		}
