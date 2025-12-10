@@ -63,15 +63,85 @@ export default function DashboardPage() {
 		}
 
 		try {
-			// TODO: Llamar a Spotify search por ca genero
-			const cancionesEjemplo = [
-				{ id: '1', name: 'Canción 1', artist: 'Artista 1', image: 'https://via.placeholder.com/50' },
-				{ id: '2', name: 'Canción 2', artist: 'Artista 2', image: 'https://via.placeholder.com/50' },
-				{ id: '3', name: 'Canción 3', artist: 'Artista 3', image: 'https://via.placeholder.com/50' },
-			];
+			// Array para guardar todas las canciones
+			let todasLasCanciones = [];
 
-			setPlaylist(cancionesEjemplo);
-			setMensaje('Playlist generada (datos de prueba).');
+			// Buscar canciones por cada género seleccionado
+			for (let i = 0; i < generosSeleccionados.length; i++) {
+				const genero = generosSeleccionados[i];
+				
+				// Construir URL de búsqueda
+				const url = 'https://api.spotify.com/v1/search?type=track&q=genre:' + genero + '&limit=10';
+				
+				// Llamar a la API de Spotify
+				const respuesta = await fetch(url, {
+					headers: {
+						'Authorization': 'Bearer ' + token
+					}
+				});
+
+				// Verificar si la respuesta es correcta
+				if (!respuesta.ok) {
+					console.log('Error en búsqueda de género:', genero);
+					continue;
+				}
+
+				// Convertir respuesta a JSON
+				const datos = await respuesta.json();
+
+				// Verificar que hay resultados
+				if (datos.tracks && datos.tracks.items) {
+					// Recorrer cada canción
+					for (let j = 0; j < datos.tracks.items.length; j++) {
+						const cancion = datos.tracks.items[j];
+						
+						// Obtener nombre del artista
+						let nombreArtista = 'Desconocido';
+						if (cancion.artists && cancion.artists.length > 0) {
+							nombreArtista = cancion.artists[0].name;
+						}
+
+						// Obtener imagen del álbum
+						let imagenAlbum = '';
+						if (cancion.album && cancion.album.images && cancion.album.images.length > 0) {
+							imagenAlbum = cancion.album.images[0].url;
+						}
+
+						// Crear objeto de canción simplificado
+						const cancionSimple = {
+							id: cancion.id,
+							name: cancion.name,
+							artist: nombreArtista,
+							image: imagenAlbum
+						};
+
+						// Agregar a la lista
+						todasLasCanciones.push(cancionSimple);
+					}
+				}
+			}
+
+			// Eliminar canciones duplicadas (mismo ID)
+			const cancionesUnicas = [];
+			const idsVistos = [];
+			
+			for (let k = 0; k < todasLasCanciones.length; k++) {
+				const cancion = todasLasCanciones[k];
+				
+				// Si no hemos visto este ID, agregar
+				if (!idsVistos.includes(cancion.id)) {
+					idsVistos.push(cancion.id);
+					cancionesUnicas.push(cancion);
+				}
+			}
+
+			// Limitar a 30 canciones máximo
+			const cancionesFinales = cancionesUnicas.slice(0, 30);
+
+			// Guardar en el estado
+			setPlaylist(cancionesFinales);
+			setMensaje('Playlist generada: ' + cancionesFinales.length + ' canciones.');
+
 		} catch (e) {
 			setMensaje('Error: ' + e.message);
 		}
