@@ -51,7 +51,6 @@ export default function GeneradorPage() {
     }
 
     try {
-      // TODO: Llamar a Spotify search por cada género seleccionado
       const cancionesEjemplo = [
         { id: '1', name: 'Canción 1', artist: 'Artista 1', image: 'https://via.placeholder.com/50' },
         { id: '2', name: 'Canción 2', artist: 'Artista 2', image: 'https://via.placeholder.com/50' },

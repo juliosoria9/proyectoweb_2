@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { isAuthenticated, getAccessToken } from '@/lib/auth';
 import Encabezado from '@/components/Encabezado';
 import WidgetGenero from '@/components/widgets/WidgetGenero';
+import WidgetDecada from '@/components/widgets/WidgetDecada';
 import VisualizadorPlaylist from '@/components/VisualizadorPlaylist';
 import styles from './page.module.css';
 
@@ -17,6 +18,7 @@ export default function DashboardPage() {
 
 	// Estado del generador
 	const [generosSeleccionados, setGenerosSeleccionados] = useState([]);
+	const [decadaSeleccionada, setDecadaSeleccionada] = useState(null);
 	const [playlist, setPlaylist] = useState([]);
 	const [cargando, setCargando] = useState(false);
 	const [mensaje, setMensaje] = useState('');
@@ -41,6 +43,11 @@ export default function DashboardPage() {
 			const nuevos = [...generosSeleccionados, genero];
 			setGenerosSeleccionados(nuevos);
 		}
+	}
+
+	// Seleccionar década
+	function manejarSeleccionDecada(decada) {
+		setDecadaSeleccionada(decada);
 	}
 
 	// Generar la playlist
@@ -70,8 +77,19 @@ export default function DashboardPage() {
 			for (let i = 0; i < generosSeleccionados.length; i++) {
 				const genero = generosSeleccionados[i];
 				
+				// Construir búsqueda base
+				let busqueda = 'genre:' + genero;
+				
+				// Si hay década seleccionada, añadir filtro de año
+				if (decadaSeleccionada) {
+					// Ejemplo: década 1980 -> buscar "year:1980-1989"
+					const anioInicio = decadaSeleccionada;
+					const anioFin = parseInt(decadaSeleccionada) + 9;
+					busqueda = busqueda + ' year:' + anioInicio + '-' + anioFin;
+				}
+				
 				// Construir URL de búsqueda
-				const url = 'https://api.spotify.com/v1/search?type=track&q=genre:' + genero + '&limit=10';
+				const url = 'https://api.spotify.com/v1/search?type=track&q=' + encodeURIComponent(busqueda) + '&limit=10';
 				
 				// Llamar a la API de Spotify
 				const respuesta = await fetch(url, {
@@ -174,6 +192,11 @@ export default function DashboardPage() {
 					generos={generosDisponibles}
 					seleccionados={generosSeleccionados}
 					onSelect={manejarSeleccionGenero}
+				/>
+
+				<WidgetDecada 
+					decadaSeleccionada={decadaSeleccionada}
+					onSelect={manejarSeleccionDecada}
 				/>
 
 				<button 
