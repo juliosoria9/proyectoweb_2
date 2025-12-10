@@ -4,28 +4,33 @@ import { useState, useEffect } from 'react';
 import styles from './TarjetaCancion.module.css';
 
 export default function TarjetaCancion({ cancion, onQuitar }) {
-  const [esFavorito, setEsFavorito] = useState(false);
+  var [esFavorito, setEsFavorito] = useState(false);
 
   useEffect(function() {
-    const guardados = localStorage.getItem('favorite_tracks');
+    var guardados = localStorage.getItem('favorite_tracks');
     if (guardados) {
-      const lista = JSON.parse(guardados);
-      const esta = lista.includes(cancion.id);
+      var lista = JSON.parse(guardados);
+      var esta = lista.includes(cancion.id);
       setEsFavorito(esta);
     }
   }, [cancion.id]);
 
   function toggleFavorito() {
-    const guardados = localStorage.getItem('favorite_tracks');
-    let lista = [];
+    var guardados = localStorage.getItem('favorite_tracks');
+    var lista = [];
+    
     if (guardados) {
       lista = JSON.parse(guardados);
     }
 
     if (esFavorito) {
-      lista = lista.filter(function(id) {
-        return id !== cancion.id;
-      });
+      var nuevaLista = [];
+      for (var i = 0; i < lista.length; i++) {
+        if (lista[i] !== cancion.id) {
+          nuevaLista.push(lista[i]);
+        }
+      }
+      lista = nuevaLista;
       setEsFavorito(false);
     } else {
       lista.push(cancion.id);
@@ -39,7 +44,7 @@ export default function TarjetaCancion({ cancion, onQuitar }) {
     onQuitar(cancion.id);
   }
 
-  let iconoEstrella = '☆';
+  var iconoEstrella = '☆';
   if (esFavorito) {
     iconoEstrella = '⭐';
   }

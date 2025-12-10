@@ -1,33 +1,27 @@
-// Generar string aleatorio para el parámetro 'state'
-export function generateRandomString(length) {
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let text = '';
-  for (let i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
+function generarStringAleatorio(longitud) {
+  var caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var texto = '';
+  
+  for (var i = 0; i < longitud; i++) {
+    var posicion = Math.floor(Math.random() * caracteres.length);
+    texto = texto + caracteres.charAt(posicion);
   }
-  return text;
+  
+  return texto;
 }
 
-// Construir URL de autorización de Spotify
 export function getSpotifyAuthUrl() {
-  const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID || '';
-  const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI || '';
-  const state = generateRandomString(16);
+  var clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID || '';
+  var redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI || '';
+  var state = generarStringAleatorio(16);
 
-  // Guardar el state para validación posterior (prevenir CSRF)
   if (typeof window !== 'undefined') {
     localStorage.setItem('spotify_auth_state', state);
   }
 
-  const scope = [
-    'user-read-private',
-    'user-read-email',
-    'user-top-read',
-    'playlist-modify-public',
-    'playlist-modify-private'
-  ].join(' ');
+  var scope = 'user-read-private user-read-email user-top-read playlist-modify-public playlist-modify-private';
 
-  const params = new URLSearchParams({
+  var params = new URLSearchParams({
     client_id: clientId,
     response_type: 'code',
     redirect_uri: redirectUri,
@@ -35,38 +29,48 @@ export function getSpotifyAuthUrl() {
     scope: scope
   });
 
-  return `https://accounts.spotify.com/authorize?${params.toString()}`;
+  var url = 'https://accounts.spotify.com/authorize?' + params.toString();
+  return url;
 }
 
-// Guardar tokens en localStorage
 export function saveTokens(accessToken, refreshToken, expiresIn) {
-  const expirationTime = Date.now() + expiresIn * 1000;
+  var expiracion = Date.now() + expiresIn * 1000;
   localStorage.setItem('spotify_token', accessToken);
   localStorage.setItem('spotify_refresh_token', refreshToken);
-  localStorage.setItem('spotify_token_expiration', expirationTime.toString());
+  localStorage.setItem('spotify_token_expiration', expiracion.toString());
 }
 
-// Obtener token actual (con verificación de expiración)
 export function getAccessToken() {
-  const token = localStorage.getItem('spotify_token');
-  const expiration = localStorage.getItem('spotify_token_expiration');
+  var token = localStorage.getItem('spotify_token');
+  var expiracion = localStorage.getItem('spotify_token_expiration');
   
-  if (!token || !expiration) return null;
+  if (!token) {
+    return null;
+  }
   
-  // Si el token expiró, retornar null
-  if (Date.now() > parseInt(expiration)) {
+  if (!expiracion) {
+    return null;
+  }
+  
+  var ahora = Date.now();
+  var tiempoExpiracion = parseInt(expiracion);
+  
+  if (ahora > tiempoExpiracion) {
     return null;
   }
   
   return token;
 }
 
-// Verificar si hay token válido
 export function isAuthenticated() {
-  return getAccessToken() !== null;
+  var token = getAccessToken();
+  if (token !== null) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
-// Cerrar sesión
 export function logout() {
   localStorage.removeItem('spotify_token');
   localStorage.removeItem('spotify_refresh_token');

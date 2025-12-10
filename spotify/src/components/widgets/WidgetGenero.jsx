@@ -5,23 +5,27 @@ import styles from './WidgetGenero.module.css';
 export default function WidgetGenero({ generos, seleccionados, onSelect }) {
   
   function renderizarBoton(genero) {
-    const estaSeleccionado = seleccionados.includes(genero);
+    var estaSeleccionado = seleccionados.includes(genero);
     
-    let claseCSS = styles.boton;
+    var claseCSS = styles.boton;
     if (estaSeleccionado) {
       claseCSS = styles.botonActivo;
     }
     
-    let texto = genero;
+    var texto = genero;
     if (estaSeleccionado) {
       texto = '✓ ' + genero;
+    }
+    
+    function handleClick() {
+      onSelect(genero);
     }
     
     return (
       <button
         key={genero}
         type="button"
-        onClick={() => onSelect(genero)}
+        onClick={handleClick}
         className={claseCSS}
       >
         {texto}

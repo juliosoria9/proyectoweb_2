@@ -5,18 +5,19 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { saveTokens } from '@/lib/auth';
 
 export default function CallbackPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [error, setError] = useState(null);
-  const hasProcessed = useRef(false);
+  var router = useRouter();
+  var searchParams = useSearchParams();
+  var [error, setError] = useState(null);
+  var yaProcesado = useRef(false);
 
-  useEffect(() => {
-    // Prevenir ejecución duplicada
-    if (hasProcessed.current) return;
+  useEffect(function() {
+    if (yaProcesado.current) {
+      return;
+    }
 
-    const code = searchParams.get('code');
-    const state = searchParams.get('state');
-    const errorParam = searchParams.get('error');
+    var code = searchParams.get('code');
+    var state = searchParams.get('state');
+    var errorParam = searchParams.get('error');
 
     if (errorParam) {
       setError('Autenticación cancelada');
@@ -28,60 +29,74 @@ export default function CallbackPage() {
       return;
     }
 
-    // Validar state para prevenir CSRF
-    const savedState = localStorage.getItem('spotify_auth_state');
+    var savedState = localStorage.getItem('spotify_auth_state');
     if (!state || state !== savedState) {
-      setError('Error de validación de seguridad (CSRF). Intenta iniciar sesión de nuevo.');
+      setError('Error de validación. Intenta de nuevo.');
       localStorage.removeItem('spotify_auth_state');
       return;
     }
 
-    // Limpiar state después de validar
     localStorage.removeItem('spotify_auth_state');
+    yaProcesado.current = true;
 
-    // Marcar como procesado
-    hasProcessed.current = true;
-
-    // Intercambiar código por token
-    const exchangeCodeForToken = async (code) => {
+    async function intercambiarToken() {
       try {
-        const response = await fetch('/api/spotify-token', {
+        var respuesta = await fetch('/api/spotify-token', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code })
+          body: JSON.stringify({ code: code })
         });
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || 'Error al obtener token');
+        var datos = await respuesta.json();
+        
+        if (!respuesta.ok) {
+          setError(datos.error || 'Error al obtener token');
+          return;
         }
 
-        // Guardar tokens
-        saveTokens(data.access_token, data.refresh_token, data.expires_in);
-
-        // Redirigir al dashboard
+        saveTokens(datos.access_token, datos.refresh_token, datos.expires_in);
         router.push('/dashboard');
-
-      } catch (error) {
-        console.error('Error:', error);
-        setError(error.message);
+      } catch (e) {
+        setError(e.message);
       }
-    };
+    }
 
-    exchangeCodeForToken(code);
+    intercambiarToken();
   }, [searchParams, router]);
+
+  function volverAlInicio() {
+    router.push('/');
+  }
+
+  var estiloContenedor = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '100vh',
+    background: '#121212'
+  };
+
+  var estiloTexto = {
+    color: 'white',
+    fontSize: '20px'
+  };
+
+  var estiloBoton = {
+    background: '#1DB954',
+    color: 'white',
+    padding: '12px 24px',
+    border: 'none',
+    borderRadius: '20px',
+    cursor: 'pointer'
+  };
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-900">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-500 mb-4">Error</h1>
-          <p className="text-white mb-6">{error}</p>
-          <button
-            onClick={() => router.push('/')}
-            className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700"
-          >
+      <div style={estiloContenedor}>
+        <div style={{ textAlign: 'center' }}>
+          <h1 style={{ color: '#e74c3c', marginBottom: '16px' }}>Error</h1>
+          <p style={{ color: 'white', marginBottom: '24px' }}>{error}</p>
+          <button type="button" onClick={volverAlInicio} style={estiloBoton}>
             Volver al inicio
           </button>
         </div>
@@ -90,11 +105,8 @@ export default function CallbackPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
-        <p className="text-white text-xl">Autenticando...</p>
-      </div>
+    <div style={estiloContenedor}>
+      <p style={estiloTexto}>Autenticando...</p>
     </div>
   );
 }

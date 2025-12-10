@@ -6,18 +6,17 @@ import { isAuthenticated, getSpotifyAuthUrl } from '@/lib/auth';
 import styles from './page.module.css';
 
 export default function Home() {
-  const router = useRouter();
+  var router = useRouter();
 
-  // Si ya tiene token, ir al dashboard
-  useEffect(() => {
+  useEffect(function() {
     if (isAuthenticated()) {
       router.push('/dashboard');
     }
   }, [router]);
 
-  // Iniciar sesión con Spotify
-  function handleLogin() {
-    window.location.href = getSpotifyAuthUrl();
+  function iniciarSesion() {
+    var url = getSpotifyAuthUrl();
+    window.location.href = url;
   }
 
   return (
@@ -25,11 +24,7 @@ export default function Home() {
       <h1 className={styles.titulo}>🍝 Spagetify</h1>
       <p className={styles.subtitulo}>Genera playlists según tus gustos</p>
       
-      <button 
-        type="button"
-        onClick={handleLogin}
-        className={styles.botonLogin}
-      >
+      <button type="button" onClick={iniciarSesion} className={styles.botonLogin}>
         Iniciar sesión con Spotify
       </button>
     </div>

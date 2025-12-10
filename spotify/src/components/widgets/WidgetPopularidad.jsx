@@ -3,30 +3,38 @@
 import styles from './WidgetPopularidad.module.css';
 
 export default function WidgetPopularidad({ popularidadSeleccionada, onSelect }) {
-  const categorias = [
-    { id: 'mainstream', nombre: 'Mainstream', min: 70, max: 100 },
-    { id: 'popular', nombre: 'Popular', min: 40, max: 69 },
-    { id: 'underground', nombre: 'Underground', min: 0, max: 39 }
+  var categorias = [
+    { id: 'mainstream', nombre: 'Mainstream' },
+    { id: 'popular', nombre: 'Popular' },
+    { id: 'underground', nombre: 'Underground' }
   ];
 
   function renderizarBoton(categoria) {
-    const estaSeleccionada = (popularidadSeleccionada === categoria.id);
+    var estaSeleccionada = (popularidadSeleccionada === categoria.id);
 
-    let claseCSS = styles.boton;
+    var claseCSS = styles.boton;
     if (estaSeleccionada) {
       claseCSS = styles.botonActivo;
+    }
+
+    function handleClick() {
+      onSelect(categoria.id);
     }
 
     return (
       <button
         key={categoria.id}
         type="button"
-        onClick={() => onSelect(categoria.id)}
+        onClick={handleClick}
         className={claseCSS}
       >
         {categoria.nombre}
       </button>
     );
+  }
+
+  function limpiarSeleccion() {
+    onSelect(null);
   }
 
   return (
@@ -38,7 +46,7 @@ export default function WidgetPopularidad({ popularidadSeleccionada, onSelect })
         
         <button
           type="button"
-          onClick={() => onSelect(null)}
+          onClick={limpiarSeleccion}
           className={styles.botonLimpiar}
         >
           Todas

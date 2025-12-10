@@ -3,28 +3,36 @@
 import styles from './WidgetDecada.module.css';
 
 export default function WidgetDecada({ decadaSeleccionada, onSelect }) {
-  const decadas = ['1960', '1970', '1980', '1990', '2000', '2010', '2020'];
+  var decadas = ['1960', '1970', '1980', '1990', '2000', '2010', '2020'];
 
   function renderizarBoton(decada) {
-    const estaSeleccionada = (decadaSeleccionada === decada);
+    var estaSeleccionada = (decadaSeleccionada === decada);
     
-    let claseCSS = styles.boton;
+    var claseCSS = styles.boton;
     if (estaSeleccionada) {
       claseCSS = styles.botonActivo;
     }
 
-    const texto = decada + 's';
+    var texto = decada + 's';
+
+    function handleClick() {
+      onSelect(decada);
+    }
 
     return (
       <button
         key={decada}
         type="button"
-        onClick={() => onSelect(decada)}
+        onClick={handleClick}
         className={claseCSS}
       >
         {texto}
       </button>
     );
+  }
+
+  function limpiarSeleccion() {
+    onSelect(null);
   }
 
   return (
@@ -36,7 +44,7 @@ export default function WidgetDecada({ decadaSeleccionada, onSelect }) {
         
         <button
           type="button"
-          onClick={() => onSelect(null)}
+          onClick={limpiarSeleccion}
           className={styles.botonLimpiar}
         >
           Todas
