@@ -6,6 +6,7 @@ import { isAuthenticated, getAccessToken } from '@/lib/auth';
 import Encabezado from '@/components/Encabezado';
 import WidgetGenero from '@/components/widgets/WidgetGenero';
 import WidgetDecada from '@/components/widgets/WidgetDecada';
+import WidgetPopularidad from '@/components/widgets/WidgetPopularidad';
 import VisualizadorPlaylist from '@/components/VisualizadorPlaylist';
 import styles from './page.module.css';
 
@@ -19,6 +20,7 @@ export default function DashboardPage() {
 	// Estado del generador
 	const [generosSeleccionados, setGenerosSeleccionados] = useState([]);
 	const [decadaSeleccionada, setDecadaSeleccionada] = useState(null);
+	const [popularidadSeleccionada, setPopularidadSeleccionada] = useState(null);
 	const [playlist, setPlaylist] = useState([]);
 	const [cargando, setCargando] = useState(false);
 	const [mensaje, setMensaje] = useState('');
@@ -45,9 +47,28 @@ export default function DashboardPage() {
 		}
 	}
 
-	// Seleccionar década
+	// Seleccionar decada
 	function manejarSeleccionDecada(decada) {
 		setDecadaSeleccionada(decada);
+	}
+
+	// Seleccionar popularidad
+	function manejarSeleccionPopularidad(popularidad) {
+		setPopularidadSeleccionada(popularidad);
+	}
+
+	// Obtener rango de popularidad
+	function obtenerRangoPopularidad(categoria) {
+		if (categoria === 'mainstream') {
+			return { min: 70, max: 100 };
+		}
+		if (categoria === 'popular') {
+			return { min: 40, max: 69 };
+		}
+		if (categoria === 'underground') {
+			return { min: 0, max: 39 };
+		}
+		return null;
 	}
 
 	// Generar la playlist
@@ -77,12 +98,12 @@ export default function DashboardPage() {
 			for (let i = 0; i < generosSeleccionados.length; i++) {
 				const genero = generosSeleccionados[i];
 				
-				// Construir búsqueda base
+				// Construir busqueda base
 				let busqueda = 'genre:' + genero;
 				
-				// Si hay década seleccionada, añadir filtro de año
+				// Si hay decada seleccionada, añadir filtro de año
 				if (decadaSeleccionada) {
-					// Ejemplo: década 1980 -> buscar "year:1980-1989"
+					// Ejemplo: decada 1980 -> buscar "year:1980-1989"
 					const anioInicio = decadaSeleccionada;
 					const anioFin = parseInt(decadaSeleccionada) + 9;
 					busqueda = busqueda + ' year:' + anioInicio + '-' + anioFin;
@@ -130,7 +151,8 @@ export default function DashboardPage() {
 							id: cancion.id,
 							name: cancion.name,
 							artist: nombreArtista,
-							image: imagenAlbum
+							image: imagenAlbum,
+							popularity: cancion.popularity
 						};
 
 						// Agregar a la lista
@@ -153,8 +175,19 @@ export default function DashboardPage() {
 				}
 			}
 
+			// Filtrar por popularidad si hay selección
+			let cancionesFiltradas = cancionesUnicas;
+			if (popularidadSeleccionada) {
+				const rango = obtenerRangoPopularidad(popularidadSeleccionada);
+				if (rango) {
+					cancionesFiltradas = cancionesUnicas.filter(c => {
+						return c.popularity >= rango.min && c.popularity <= rango.max;
+					});
+				}
+			}
+
 			// Limitar a 30 canciones máximo
-			const cancionesFinales = cancionesUnicas.slice(0, 30);
+			const cancionesFinales = cancionesFiltradas.slice(0, 30);
 
 			// Guardar en el estado
 			setPlaylist(cancionesFinales);
@@ -197,6 +230,11 @@ export default function DashboardPage() {
 				<WidgetDecada 
 					decadaSeleccionada={decadaSeleccionada}
 					onSelect={manejarSeleccionDecada}
+				/>
+
+				<WidgetPopularidad
+					popularidadSeleccionada={popularidadSeleccionada}
+					onSelect={manejarSeleccionPopularidad}
 				/>
 
 				<button 

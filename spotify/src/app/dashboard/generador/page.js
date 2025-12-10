@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { isAuthenticated, logout, getAccessToken } from '@/lib/auth';
 import WidgetGenero from '@/components/widgets/WidgetGenero';
+import WidgetPopularidad from '@/components/widgets/WidgetPopularidad';
 import VisualizadorPlaylist from '@/components/VisualizadorPlaylist';
 
 export default function GeneradorPage() {
@@ -12,6 +13,7 @@ export default function GeneradorPage() {
     'rock', 'pop', 'jazz', 'hip-hop', 'electronic', 'indie', 'folk', 'metal'
   ]);
   const [generosSeleccionados, setGenerosSeleccionados] = useState([]);
+  const [popularidadSeleccionada, setPopularidadSeleccionada] = useState(null);
   const [playlist, setPlaylist] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [mensaje, setMensaje] = useState('');
@@ -34,6 +36,25 @@ export default function GeneradorPage() {
     }
   }
 
+  // Manejar selección de popularidad
+  function manejarSeleccionPopularidad(popularidad) {
+    setPopularidadSeleccionada(popularidad);
+  }
+
+  // Obtener rango de popularidad según categoría
+  function obtenerRangoPopularidad(categoria) {
+    if (categoria === 'mainstream') {
+      return { min: 70, max: 100 };
+    }
+    if (categoria === 'popular') {
+      return { min: 40, max: 69 };
+    }
+    if (categoria === 'underground') {
+      return { min: 0, max: 39 };
+    }
+    return null;
+  }
+
   async function generarPlaylist() {
     if (generosSeleccionados.length === 0) {
       setMensaje('Selecciona al menos un género.');
@@ -51,14 +72,61 @@ export default function GeneradorPage() {
     }
 
     try {
-      const cancionesEjemplo = [
-        { id: '1', name: 'Canción 1', artist: 'Artista 1', image: 'https://via.placeholder.com/50' },
-        { id: '2', name: 'Canción 2', artist: 'Artista 2', image: 'https://via.placeholder.com/50' },
-        { id: '3', name: 'Canción 3', artist: 'Artista 3', image: 'https://via.placeholder.com/50' },
-      ];
+      let todasLasCanciones = [];
 
-      setPlaylist(cancionesEjemplo);
-      setMensaje('Playlist generada (datos de prueba).');
+      // Buscar canciones de cada género
+      for (let i = 0; i < generosSeleccionados.length; i++) {
+        const genero = generosSeleccionados[i];
+        const busqueda = 'genre:' + genero;
+        const url = 'https://api.spotify.com/v1/search?type=track&q=' + encodeURIComponent(busqueda) + '&limit=15';
+
+        const respuesta = await fetch(url, {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const datos = await respuesta.json();
+
+        if (datos.tracks && datos.tracks.items) {
+          const canciones = datos.tracks.items;
+
+          for (let j = 0; j < canciones.length; j++) {
+            const cancion = canciones[j];
+            todasLasCanciones.push({
+              id: cancion.id,
+              name: cancion.name,
+              artist: cancion.artists[0].name,
+              image: cancion.album.images[0]?.url || '',
+              popularity: cancion.popularity
+            });
+          }
+        }
+      }
+
+      // Filtrar por popularidad si hay selección
+      if (popularidadSeleccionada) {
+        const rango = obtenerRangoPopularidad(popularidadSeleccionada);
+        if (rango) {
+          todasLasCanciones = todasLasCanciones.filter(c => {
+            return c.popularity >= rango.min && c.popularity <= rango.max;
+          });
+        }
+      }
+
+      // Quitar duplicados
+      const sinDuplicados = [];
+      const idsVistos = [];
+      for (let i = 0; i < todasLasCanciones.length; i++) {
+        const cancion = todasLasCanciones[i];
+        if (!idsVistos.includes(cancion.id)) {
+          idsVistos.push(cancion.id);
+          sinDuplicados.push(cancion);
+        }
+      }
+
+      // Limitar a 30 canciones
+      const playlistFinal = sinDuplicados.slice(0, 30);
+
+      setPlaylist(playlistFinal);
+      setMensaje('Playlist generada con ' + playlistFinal.length + ' canciones.');
     } catch (e) {
       setMensaje('Error: ' + e.message);
     }
@@ -97,6 +165,11 @@ export default function GeneradorPage() {
         generos={generosDisponibles}
         seleccionados={generosSeleccionados}
         onSelect={manejarSeleccionGenero}
+      />
+
+      <WidgetPopularidad
+        popularidadSeleccionada={popularidadSeleccionada}
+        onSelect={manejarSeleccionPopularidad}
       />
 
       <button 

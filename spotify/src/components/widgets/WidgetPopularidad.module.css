@@ -1,0 +1,44 @@
+.contenedor {
+  margin-bottom: 20px;
+}
+
+.descripcion {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.lista {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.boton {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  background-color: #ccc;
+  color: #000;
+  font-weight: normal;
+}
+
+.botonActivo {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  background-color: #1DB954;
+  color: #fff;
+  font-weight: bold;
+}
+
+.botonLimpiar {
+  padding: 8px 16px;
+  border: 1px dashed #999;
+  border-radius: 20px;
+  cursor: pointer;
+  background-color: transparent;
+  color: #666;
+}
