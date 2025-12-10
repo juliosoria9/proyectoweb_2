@@ -5,7 +5,6 @@ import styles from './VisualizadorPlaylist.module.css';
 
 export default function VisualizadorPlaylist({ playlist, onQuitar }) {
   
-  // Si no hay canciones, mostrar mensaje
   if (playlist.length === 0) {
     return (
       <div className={styles.vacio}>
@@ -15,7 +14,6 @@ export default function VisualizadorPlaylist({ playlist, onQuitar }) {
     );
   }
   
-  // Renderizar una canción
   function renderizarCancion(cancion) {
     return (
       <TarjetaCancion 
@@ -26,7 +24,6 @@ export default function VisualizadorPlaylist({ playlist, onQuitar }) {
     );
   }
   
-  // Mostrar la playlist
   return (
     <div className={styles.contenedor}>
       <h2>Playlist generada ({playlist.length} canciones)</h2>

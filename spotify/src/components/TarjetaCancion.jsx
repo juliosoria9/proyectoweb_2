@@ -4,15 +4,10 @@ import { useState, useEffect } from 'react';
 import styles from './TarjetaCancion.module.css';
 
 export default function TarjetaCancion({ cancion, onQuitar }) {
-  
-
   const [esFavorito, setEsFavorito] = useState(false);
 
- 
   useEffect(function() {
     const guardados = localStorage.getItem('favorite_tracks');
-    
-
     if (guardados) {
       const lista = JSON.parse(guardados);
       const esta = lista.includes(cancion.id);
@@ -20,36 +15,29 @@ export default function TarjetaCancion({ cancion, onQuitar }) {
     }
   }, [cancion.id]);
 
-
   function toggleFavorito() {
-
     const guardados = localStorage.getItem('favorite_tracks');
     let lista = [];
     if (guardados) {
       lista = JSON.parse(guardados);
     }
 
-
     if (esFavorito) {
       lista = lista.filter(function(id) {
         return id !== cancion.id;
       });
       setEsFavorito(false);
-    } 
-
-    else {
+    } else {
       lista.push(cancion.id);
       setEsFavorito(true);
     }
 
- 
     localStorage.setItem('favorite_tracks', JSON.stringify(lista));
   }
   
   function handleQuitar() {
     onQuitar(cancion.id);
   }
-
 
   let iconoEstrella = '☆';
   if (esFavorito) {
@@ -58,12 +46,10 @@ export default function TarjetaCancion({ cancion, onQuitar }) {
   
   return (
     <div className={styles.tarjeta}>
-      
       <button type="button" onClick={toggleFavorito} className={styles.botonFavorito}>
         {iconoEstrella}
       </button>
       
- 
       {cancion.image && (
         <img 
           src={cancion.image} 
@@ -82,7 +68,6 @@ export default function TarjetaCancion({ cancion, onQuitar }) {
       <button type="button" onClick={handleQuitar} className={styles.botonQuitar}>
         Quitar
       </button>
-      
     </div>
   );
 }

@@ -3,19 +3,14 @@
 import styles from './WidgetPopularidad.module.css';
 
 export default function WidgetPopularidad({ popularidadSeleccionada, onSelect }) {
-  
-
   const categorias = [
     { id: 'mainstream', nombre: 'Mainstream', min: 70, max: 100 },
     { id: 'popular', nombre: 'Popular', min: 40, max: 69 },
     { id: 'underground', nombre: 'Underground', min: 0, max: 39 }
   ];
 
- 
   function renderizarBoton(categoria) {
- 
     const estaSeleccionada = (popularidadSeleccionada === categoria.id);
-    
 
     let claseCSS = styles.boton;
     if (estaSeleccionada) {
